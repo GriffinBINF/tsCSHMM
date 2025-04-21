@@ -1,3 +1,26 @@
 .ipynb_checkpoints/
 FULL EM-checkpoint.ipynb
 *.h5ad
+
+# Cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Data and outputs
+*.csv
+*.tsv
+*.xlsx
+*.h5
+*.pdf
+*.npy
+*.npz
+
+# OS/Editor cruft
+.DS_Store
+.ipynb_checkpoints/
+*.swp
+*.swo
+*.bak
+*.tmp
