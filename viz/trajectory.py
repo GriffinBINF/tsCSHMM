@@ -191,7 +191,11 @@ def plot_cells_on_trajectory(
             raise ValueError(f"Unsupported file format: '{ext}'. Must be one of {valid_exts}")
         plt.savefig(savepath, dpi=300, bbox_inches='tight')
 
+    fig = plt.gcf()
     plt.show()
+    return fig
+
+    
 
 
 def draw_pdf_height_legend(ax, pdf_scale):

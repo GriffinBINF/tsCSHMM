@@ -33,6 +33,10 @@ class EMTrainer:
         self.debug = debug
         self.timer = timer
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.assignment_history = []
+        self.emission_history = []
+        self.emission_params_history = []
+
 
     def _log(self, msg):
         if self.verbose:
@@ -1613,6 +1617,13 @@ class EMTrainer:
                     verbose=self.verbose,
                     debug=self.debug,
                 )
+                # Save emission_params history
+                self.emission_params_history.append({
+                    edge: {k: v.copy() if isinstance(v, np.ndarray) else v
+                           for k, v in param_dict.items()}
+                    for edge, param_dict in self.traj_graph.emission_params.items()
+                })
+
 
                 self._log("\n📏 Updating noise variances (r²)...")
                 self._time("r² update", self._update_r2_parameters)
@@ -1627,6 +1638,11 @@ class EMTrainer:
                     max_iter=admm_max_iter,
                     tol=admm_tol,
                 )
+                # Save emission history
+                self.emission_history.append({
+                    node: vec.copy() for node, vec in self.traj_graph.node_emission.items()
+                })
+
         
                 self._log("\n📊 Updating Branch Probabilities...")
                 self._time("Updating Branch Probs", self.update_branch_probabilities)
@@ -1640,6 +1656,9 @@ class EMTrainer:
                     n_neighbors=reassign_n_neighbors,
                     branch_weight=reassign_branch_weight,
                 )
+                # Save assignment history
+                self.assignment_history.append(self.cell_assignment.copy())
+
                 self._log(f"📉 E-step loss: {e_step_loss:.4f}")
         
                 # if prune_structure:
@@ -1690,4 +1709,3 @@ class EMTrainer:
             return self.traj_graph, self.cell_assignment
         finally:
             self._cleanup_shared_resources()
-

@@ -404,7 +404,7 @@ class TrajectoryGraph:
 
     def plot_cells_on_trajectory(self, cell_assignment, **kwargs):
         plot_df = cell_assignment.copy()
-        plot_cells_on_trajectory(self.G_traj, plot_df, self.adata, branch_probs=self.branch_probabilities, **kwargs)
+        return plot_cells_on_trajectory(self.G_traj, plot_df, self.adata, branch_probs=self.branch_probabilities, **kwargs)
 
 def initialize_trajectory(adata, random_state=None, cluster_key='leiden', root_cluster=None, topology_config=None, debug=False):
     traj_graph = TrajectoryGraph(
